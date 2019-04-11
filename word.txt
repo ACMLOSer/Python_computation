@@ -1,0 +1,38 @@
+this course's name is python computation
+ines are plotted going through it, all
+at different angles. These are shown
+in Figure (5) as solid lines.
+2. For each solid line a line is plotted
+which is perpendicular to it and
+which intersects the origin. These are
+shown as dashed lines.
+3. The length and angle of each
+dashed line is measured. In the figure
+above, the results are shown in
+tables.
+4. This is repeated for each data
+point
+5. A graph of length against angle is
+then created.
+The point where the lines intersect
+gives a distance and angle. This
+distance and angle
+Radon transform was implemented
+according to the following steps:
+1. The user must input the threshold
+value used for detecting lines.
+2. The user must input the input
+image which must be black and white
+or gray mode. If the input image is a
+RGB then it must be converted to
+gray level image.
+3. Then the edges in the image will
+be detected and the result from this
+step is a binary file.
+4. The next step is to compute the
+accumulator matrix using Radon
+transform (this matrix is similar to
+the tables shown in Figure (5)). The
+accumulator matrix is a two
+dimensional matrix and from this
+matrix the parameters r and q for the
