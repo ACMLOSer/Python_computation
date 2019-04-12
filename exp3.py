@@ -50,7 +50,7 @@ def class_generator(student_number):
     return class_birthday_list
 
 
-def class_statics(birthday_counter, student_number):
+def class_statics(birthday_counter: Counter, student_number: int):
     for i in range(student_number):
         temp_birthday = birthday_generator()
         birthday_counter[temp_birthday] += 1
@@ -58,12 +58,7 @@ def class_statics(birthday_counter, student_number):
             return True
 
 
-def check_same_birthday(class_birthday_list):
-    for birthday in enumerate(class_birthday_list):
-        pass
-
-
-def dedupe(items, key=None):
+def dedupe(items: list, key=None):
     seen = set()
     for item in items:
         val = item if key is None else key(item)
@@ -73,9 +68,10 @@ def dedupe(items, key=None):
     return seen
 
 
-def dedupe_dict(_dict):
+def dedupe_dict(_dict: dict):
     tuple_r_dict = lambda _dict: dict(val[::-1] for val in _dict.items())
     return tuple_r_dict(tuple_r_dict(_dict))
+
 
 def draw_table():
     print('+————+————+')
@@ -86,16 +82,34 @@ def draw_table():
         print('|    |    |')
     print('+————+————+')
 
-def getLength(item):
+def getLength(item: str):
     return len(item)
 
-def find_longest_shrinkable(file_path):
+def find_longest_shrinkable(file_path: str):
     f = open(file_path)
     file_content = f.read().split('\n')
     f.close()
     file_content.sort(key=getLength, reverse=True)
+    temp_file_content = set(file_content)
+    for word in file_content:
+        # temp_file_content.remove(word)
+        if recursive_find(word=word, file_content=temp_file_content):
+            print('Find Word:', word)
+            break
 
 
+
+def recursive_find(word: str, file_content: set):
+    if word == 'a' or word == 'i':
+        return True
+    if word not in file_content:
+        return False
+    else:
+        for i in range(len(word)):
+            if recursive_find(word[0:i] + word[i+1:], file_content):
+                print(word[0:i] + word[i+1:] + ' <- ', end='')
+                return True
+        return False
 
 
 if __name__ == '__main__':
