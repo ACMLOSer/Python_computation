@@ -86,5 +86,5 @@ if __name__ == '__main__':
     added_time.printtime()
     print(test_time1.isvalid())
     print(Time(56, 56, 111).isvalid())
-    Time(21, 56, 4).increment(3600).printtime()
+    Time(23, 56, 4).increment(3600).printtime()
     print(str(test_time1))
