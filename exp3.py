@@ -38,26 +38,26 @@ def ack(m, n):
 def birthday_generator():
     from random import randint
     # 生成随机的年份和月
-    year = randint(1990, 2005)
-    month = randint(1, 12)
-    # 闰年判断
-    if year % 400 == 0 or (year % 4 == 0 and year % 100 != 0):
-        if month == 2:
-            day = randint(1, 29)
-        elif month in MONTH31SET:
-            day = randint(1, 31)
-        else:
-            day = randint(1, 30)
-    else:
-        if month == 2:
-            day = randint(1, 28)
-        elif month in MONTH31SET:
-            day = randint(1, 31)
-        else:
-            day = randint(1, 30)
-    # 构造生日元组并返回
-    birthday = (year, month, day)
-    return birthday
+    # year = randint(1990, 2005)
+    # month = randint(1, 12)
+    # # 闰年判断
+    # if year % 400 == 0 or (year % 4 == 0 and year % 100 != 0):
+    #     if month == 2:
+    #         day = randint(1, 29)
+    #     elif month in MONTH31SET:
+    #         day = randint(1, 31)
+    #     else:
+    #         day = randint(1, 30)
+    # else:
+    #     if month == 2:
+    #         day = randint(1, 28)
+    #     elif month in MONTH31SET:
+    #         day = randint(1, 31)
+    #     else:
+    #         day = randint(1, 30)
+    # # 构造生日元组并返回
+    # birthday = (year, month, day)
+    return randint(1, 365)
 
 
 # 每次返回一个班级的生日，此处并不使用，可以用于生成数据进行可视化分析
@@ -91,6 +91,7 @@ def classes_statics():
                     birthday_counter=birthday_counter,
                     student_number=number_of_student):
                 birthday_duplicate += 1
+            birthday_counter.clear()
         odd_list.append(birthday_duplicate / 10)
     print(odd_list)
     plt.figure(figsize=(10, 10))
@@ -180,6 +181,7 @@ def list_dict_filter():
 
 
 if __name__ == '__main__':
+    print(ack(3, 2))
     classes_statics()
     list_dict_filter()
     draw_table()
