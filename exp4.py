@@ -29,6 +29,8 @@ class Time:
 
     def __add__(self, other):
         temp = Time()
+        if not self.isvalid() or not other.isvalid():
+            raise ValueError("Including Time Object invalid!!!")
         temp.hour = self.hour + other.hour
         temp.minute = self.minute + other.minute
         temp.second = self.second + other.second
