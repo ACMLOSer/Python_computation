@@ -16,7 +16,6 @@ g、方法 isvalid:判断时间对象合法性。
 在主函数 设计代码验证 Time 各个方法的正确性。
 """
 
-
 class Time:
 
     def __init__(self, hour=0, minute=0, second=0):
