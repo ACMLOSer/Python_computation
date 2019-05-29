@@ -149,6 +149,7 @@ class GUI(object):
             pass
         dlg.Destroy()
 
+
 def get_int_from_file(file, reshape=None):
     if reshape is None:
         with open(file) as f:
@@ -157,10 +158,9 @@ def get_int_from_file(file, reshape=None):
             content = np.array(content, dtype=np.float)
             content = map(abs, content)
             content = list(content)
-            content_index = [(index, content[index]) for index in range(len(content))]
-            content.sort()
-            content = np.array(content)
-            return [content, content_index]
+            content_indexes = [(index, content[index]) for index in range(len(content))]
+            content_indexes.sort(key=lambda content_index:content_index[1])
+            return content_indexes
     else:
         with open(file) as f:
             content = re.split('\n|,', f.read())
@@ -170,44 +170,70 @@ def get_int_from_file(file, reshape=None):
             return content
 
 
+def get_indexes(sorted_lables, k):
+    dims = []
+    for i in range(k):
+        dims.append(sorted_lables[i][0])
+    return dims
+
+
+def get_lower_data(data, indexes):
+    lower_data = data[:, indexes[0]]
+    for i in range(1, len(indexes)):
+        lower_data = np.vstack((lower_data, data[:, indexes[i]]))
+    return lower_data.T
+
+
+
+
 if __name__ == '__main__':
     # NOTE(lmy): Codes below are bout GUI
-    myGUI = GUI()
+    # myGUI = GUI()
 
 
 
     # NOTE(lmy): Codes below are about the data analysis
-    # CEMT_FILE = '/Users/lmy/学习/大三春/Python computation/EXP5/dataanalysis/label/CEMTL_Male.dat'
-    # MTL_FILE = '/Users/lmy/学习/大三春/Python computation/EXP5/dataanalysis/label/MTL_Male.dat'
-    # CMTL_FILE = '/Users/lmy/学习/大三春/Python computation/EXP5/dataanalysis/label/CMTL_Male.dat'
-    # FILES = [CEMT_FILE, MTL_FILE, CMTL_FILE]
-    # DATA = []
-    # for FILE in FILES:
-    #     DATA.append(get_int_from_file(FILE))
-    #
-    # TRAIN_FILE = '/Users/lmy/学习/大三春/Python computation/EXP5/dataanalysis/train/MTL_Male_train.dat'
-    #
-    # TrainSample = get_int_from_file(TRAIN_FILE, True)
-    # labels = np.zeros((1000, 1))
-    # labels[:500] = 0
-    # labels[500:] = 1
-    # TestSample = get_int_from_file('/Users/lmy/学习/大三春/Python computation/EXP5/dataanalysis/test/MTL_Male_test.dat', True)
-    # clf = KNeighborsClassifier(4)
-    # clf.fit(X=TrainSample, y=labels)
-    # labels_test = np.zeros((800, 1))
-    # labels[:400] = 0
-    # labels[400:] = 1
-    # # print(clf.score(TestSample, labels_test))
-    # error_0 = 0
-    # error_1 = 0
-    # for i, value in enumerate(list(clf.predict(TestSample))):
-    #     if i < 400:
-    #         if value == 1:
-    #             error_0 += 1
-    #     else:
-    #         if value == 0:
-    #             error_1 += 1
-    #
-    # print('accuracy:%f' % (1 - (error_0 + error_1) / 800))
-    # print('0 class recall rate: %f' % (1 - error_0 / 400))
-    # print('1 class recall rate: %f' % (1 - error_1 / 400))
+    CEMT_FILE = '/Users/lmy/学习/大三春/Python computation/EXP5/dataanalysis/label/CEMTL_Male.dat'
+    MTL_FILE = '/Users/lmy/学习/大三春/Python computation/EXP5/dataanalysis/label/MTL_Male.dat'
+    CMTL_FILE = '/Users/lmy/学习/大三春/Python computation/EXP5/dataanalysis/label/CMTL_Male.dat'
+    FILES = [CEMT_FILE, MTL_FILE, CMTL_FILE]
+    indexes = []
+    k = 3000
+    for FILE in FILES:
+        indexes.append(get_indexes(get_int_from_file(FILE), k))
+
+    # print(DATA[0])
+
+    TRAIN_FILE = '/Users/lmy/学习/大三春/Python computation/EXP5/dataanalysis/train/MTL_Male_train.dat'
+
+    TrainSample = get_int_from_file(TRAIN_FILE, True)
+
+    labels = np.zeros((1000, 1))
+    labels[:500] = 0
+    labels[500:] = 1
+    TestSample = get_int_from_file('/Users/lmy/学习/大三春/Python computation/EXP5/dataanalysis/test/MTL_Male_test.dat',
+                                   True)
+    print(TrainSample.shape)
+    clf = KNeighborsClassifier(4)
+    for index in indexes:
+        X_data = get_lower_data(TrainSample, index)
+        Test = get_lower_data(TestSample, index)
+        print(X_data.shape)
+        clf.fit(X=X_data, y=labels)
+        labels_test = np.zeros((800, 1))
+        labels[:400] = 0
+        labels[400:] = 1
+        # print(clf.score(TestSample, labels_test))
+        error_0 = 0
+        error_1 = 0
+        for i, value in enumerate(list(clf.predict(Test))):
+            if i < 400:
+                if value == 1:
+                    error_0 += 1
+            else:
+                if value == 0:
+                    error_1 += 1
+
+        print('accuracy:%f' % (1 - (error_0 + error_1) / 800))
+        print('0 class recall rate: %f' % (1 - error_0 / 400))
+        print('1 class recall rate: %f' % (1 - error_1 / 400))
